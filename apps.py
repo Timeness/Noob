@@ -174,13 +174,13 @@ class ControllerBot:
         await self.setup_handlers()
         try:
             await self.client.start()
-            logger.info("Controller Bot started successfully")
+            self.logger.info("Controller Bot started successfully")
             await asyncio.Event().wait()
         except Exception as e:
-            logger.error(f"Failed to start bot: {e}")
+            self.logger.error(f"Failed to start bot: {e}")
         finally:
             await self.client.stop()
-            logger.info("Controller Bot stopped")
+            self.logger.info("Controller Bot stopped")
 
 bot = ControllerBot()
 loop = asyncio.get_event_loop()
