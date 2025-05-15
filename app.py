@@ -19,10 +19,10 @@ class BotModule:
 
 class ControllerBot:
     def __init__(self):
-        self.api_id: int = int(os.getenv("API_ID"))
-        self.api_hash: str = os.getenv("API_HASH")
-        self.owner_id: int = int(os.getenv("OWNER_ID"))
-        self.bot_token: str = os.getenv("CONTROLLER_BOT_TOKEN")
+        self.api_id: int = int(os.getenv("API_ID", "25335325"))
+        self.api_hash: str = os.getenv("API_HASH", "9c3e5c9ac118570fad529aabff46fe44")
+        self.owner_id: int = int(os.getenv("OWNER_ID", "5220416927"))
+        self.bot_token: str = os.getenv("CONTROLLER_BOT_TOKEN", "7740247503:AAHh8C1JTdOH2ZZfV_A-2UlvfCG3jLafuv0")
         self.cloned_bots: Dict[str, Client] = {}
         self.client: Client = Client(
             "controller_bot",
