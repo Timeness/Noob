@@ -12,6 +12,7 @@ from functools import wraps
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @dataclass
 class BotModule:
@@ -156,7 +157,7 @@ class ControllerBot:
             logger.error(f"Failed to start bot: {e}")
         finally:
             await self.client.stop()
-            print("Controller Bot stopped")
+            logger.info("Controller Bot stopped")
 
 bot = ControllerBot()
 loop = asyncio.get_event_loop()
