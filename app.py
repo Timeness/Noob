@@ -148,9 +148,33 @@ class ControllerBot:
 
     async def run(self) -> None:
         await self.setup_handlers()
+        try:
+            await self.client.start()
+            logger.info("Controller Bot started successfully")
+            await asyncio.Event().wait()
+        except Exception as e:
+            logger.error(f"Failed to start bot: {e}")
+        finally:
+            await self.client.stop()
+            logger.info("Controller Bot stopped")
+
+bot = ControllerBot()
+loop = asyncio.get_event_loop()
+try:
+    loop.run_until_complete(bot.run())
+except KeyboardInterrupt:
+    logger.info("Shutting down bot")
+finally:
+    loop.close()
+
+"""    
+    
+    async def run(self) -> None:
+        await self.setup_handlers()
         await self.client.start()
         await asyncio.Event().wait()
 
 bot = ControllerBot()
 bot.run()
-#asyncio.run(bot.run())
+asyncio.run(bot.run())
+"""
