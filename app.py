@@ -2,6 +2,7 @@ from pyrogram import Client
 from pyrogram import filters
 from pyrogram.types import BotCommand
 import asyncio
+import pyrogram
 import logging
 import os
 from dotenv import load_dotenv
@@ -133,7 +134,7 @@ class ControllerBot:
 
     async def setup_handlers(self) -> None:
         self.client.add_handler(
-            pyrofork.handlers.MessageHandler(
+            pyrogram.handlers.MessageHandler(
                 self.clone_bot,
                 filters.command("clone")
             )
