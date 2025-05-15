@@ -1,12 +1,12 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message, LabeledPrice, PreCheckoutQuery
 
+BOT_TOKEN = input("ENTER YOUR BOT TOKEN : ").strip()
 API_ID = "25335325"
 API_HASH = "9c3e5c9ac118570fad529aabff46fe44"
-BOT_TOKEN = "YOUR_BOT_TOKEN"
 COMMAND_HANDLER = ["/", "!"]
 
-app = Client("PayBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+app = Client("PayApp", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 @app.on_message(filters.command(["pay"], COMMAND_HANDLER))
 async def pay_command(self: Client, ctx: Message):
