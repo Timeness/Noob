@@ -152,4 +152,5 @@ class ControllerBot:
         await asyncio.Event().wait()
 
 bot = ControllerBot()
-asyncio.run(bot.run())
+bot.run()
+#asyncio.run(bot.run())
