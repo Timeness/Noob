@@ -156,7 +156,7 @@ class ControllerBot:
             logger.error(f"Failed to start bot: {e}")
         finally:
             await self.client.stop()
-            logger.info("Controller Bot stopped")
+            print("Controller Bot stopped")
 
 bot = ControllerBot()
 loop = asyncio.get_event_loop()
