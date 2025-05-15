@@ -140,7 +140,7 @@ class ControllerBot:
             )
         )
         self.client.add_handler(
-            pyrofork.handlers.MessageHandler(
+            pyrogram.handlers.MessageHandler(
                 self.stop_bot,
                 filters.command("stop")
             )
