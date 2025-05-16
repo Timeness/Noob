@@ -248,7 +248,7 @@ def readable_Time(seconds: float) -> str:
     return result or "0.1s"
 
 async def eos_Send(msg, **kwargs):
-    func = msg.edit if msg.from_user.is_self else msg.reply
+    func = msg.edit if msg.from_user else msg.reply
     spec = getfullargspec(func.__wrapped__).args
     await func(**{k: v for k, v in kwargs.items() if k in spec})
 
