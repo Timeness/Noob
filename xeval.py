@@ -250,7 +250,7 @@ async def eos_Send(msg, **kwargs):
     spec = getfullargspec(func.__wrapped__).args
     await func(**{k: v for k, v in kwargs.items() if k in spec})
 
-class Language(Enum):
+class Language():
     PYTHON = "python"
     JAVASCRIPT = "javascript"
     SHELL = "shell"
