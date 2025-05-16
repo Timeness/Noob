@@ -1,6 +1,4 @@
-const { InputFile } = require('grammy');
-
-module.exports = setupAdminCommands(bot) {
+function setupAdminCommands(bot) {
   async function getUserId(ctx) {
     if (ctx.message.reply_to_message) return ctx.message.reply_to_message.from.id;
     const args = ctx.message.text.split(" ");
@@ -16,11 +14,9 @@ module.exports = setupAdminCommands(bot) {
 
   bot.command(["ban", "unban", "kick", "mute", "unmute", "promote", "demote"], async ctx => {
     if (!(await isAdmin(ctx))) return ctx.reply("You are not an admin.");
-
     const command = ctx.message.text.split(" ")[0].slice(1);
     const targetId = await getUserId(ctx);
     if (!targetId) return ctx.reply("Mention or reply to a user.");
-
     const chatId = ctx.chat.id;
 
     const commands = {
@@ -96,11 +92,7 @@ module.exports = setupAdminCommands(bot) {
     if (!lockTypes[type]) return ctx.reply("Invalid lock type. Use: media, messages, links, all");
 
     const permissions = Object.fromEntries(
-      Object.entries(lockTypes).flatMap(([key, perms]) =>
-        key === type
-          ? perms.map(p => [p, cmd === "/unlock"])
-          : []
-      )
+      lockTypes[type].map(p => [p, cmd === "/unlock"])
     );
 
     try {
@@ -111,3 +103,5 @@ module.exports = setupAdminCommands(bot) {
     }
   });
 }
+
+module.exports = setupAdminCommands;
