@@ -1,6 +1,6 @@
 const { InputFile } = require('grammy');
 
-export function setupAdminCommands(bot) {
+module.exports = setupAdminCommands(bot) {
   async function getUserId(ctx) {
     if (ctx.message.reply_to_message) return ctx.message.reply_to_message.from.id;
     const args = ctx.message.text.split(" ");
