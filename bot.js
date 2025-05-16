@@ -80,7 +80,7 @@ function getSenderId(ctx) {
 
 bot.command("id", async (ctx) => {
     try {
-        const msg = ctx.message!;
+        const msg = ctx.message;
         const reply = msg.reply_to_message;
         const chat = msg.chat;
         const yourId = getSenderId(ctx);
