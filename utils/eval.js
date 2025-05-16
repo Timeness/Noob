@@ -51,4 +51,4 @@ async function evaluate(code, ctx) {
   }
 }
 
-module.exports = evaluate;
+module.exports = { evaluate };
