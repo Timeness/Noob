@@ -72,7 +72,7 @@ bot.command("ex", async (ctx) => {
   }
 });
 
-function getSenderId(ctx: Context): number {
+function getSenderId(ctx) {
     if (ctx.message?.sender_chat) return ctx.message.sender_chat.id;
     if (ctx.message?.from) return ctx.message.from.id;
     return 0;
