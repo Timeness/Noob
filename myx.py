@@ -681,13 +681,13 @@ class ConfigReloadHandler(FileSystemEventHandler):
             console.print("[bold green]Config updated, reloading...[/bold green]")
 
 
-observer = Observer()
-observer.schedule(ConfigReloadHandler(), path=".", recursive=False)
-observer.start()
+#observer = Observer()
+#observer.schedule(ConfigReloadHandler(), path=".", recursive=False)
+#observer.start()
 try:
     app.run()
 except Exception as e:
     logger.error(f"Bot failed to start: {e}")
-finally:
-    observer.stop()
-    observer.join()
+#finally:
+    #observer.stop()
+    #observer.join()
