@@ -1,4 +1,3 @@
-```python
 import io
 import re
 import os
@@ -619,7 +618,6 @@ class ConfigReloadHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith("config.json"):
             console.print("[bold green]Config updated, reloading...[/bold green]")
-
 
 
 observer = Observer()
