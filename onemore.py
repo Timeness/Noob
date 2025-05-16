@@ -70,7 +70,7 @@ class Config:
         PREFIXS = list(env.get("PREFIXS", "? * $ . ! /").split())
         API_ID = int(env.get("API_ID", "29400566"))
         API_HASH = str(env.get("API_HASH", "8fd30dc496aea7c14cf675f59b74ec6f"))
-        BOT_TOKEN = str(env.get("BOT_TOKEN", "8054875786:AAG3YDeTKlFJv9tvXJuQQUABECmYI9gFbJk"))
+        BOT_TOKEN = str(env.get("BOT_TOKEN", "7828186349:AAHkqXZvoPVJlErqSCRmCO675IJf9yLmxTs"))
     except (ValueError, TypeError) as e:
         logger.error(f"Failed to load environment variables: {e}")
         raise SystemExit("Please set API_ID, API_HASH, BOT_TOKEN, SUDOERS, and PREFIXS environment variables.")
@@ -637,4 +637,4 @@ def main():
     finally:
         app.stop()
 
-main()  
+main()
