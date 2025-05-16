@@ -13,13 +13,13 @@ bot.command("pay", async (ctx) => {
   const args = ctx.message?.text?.split(" ");
   const amount = args?.[1] && /^\d+$/.test(args[1]) ? parseInt(args[1]) : 5;
 
-  await ctx.replyWithInvoice({
-    title: "Pay Donation",
-    description: "Donate via Stars",
-    payload: "{}",
-    currency: "XTR",
-    prices: [{ label: "Donation", amount: amount }],
-  });
+  await ctx.replyWithInvoice(
+    "Pay Donation",
+    "Donate via Stars",
+    "{}",
+    "XTR",
+    [{ amount: amount, label: "Donation" }],
+  );
 });
 
 bot.on("message:successful_payment", (ctx) => {
