@@ -19,6 +19,7 @@ bot.command("pay", async (ctx) => {
     "{}",
     "XTR",
     [{ amount: amount, label: "Donation" }],
+    "https://i.ibb.co/6RLCFgQ7/logo-black.png"
   );
 });
 
