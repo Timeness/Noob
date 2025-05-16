@@ -14,11 +14,11 @@ bot.command("pay", async (ctx) => {
   const amount = args?.[1] && /^\d+$/.test(args[1]) ? parseInt(args[1]) : 5;
 
   await ctx.replyWithInvoice({
-    "Pay Donation",
-    "Donate via Stars",
-    "{}",
-    "XTR",
-    [{ label: "Donation", amount: amount }],
+    title: "Pay Donation",
+    description: "Donate via Stars",
+    payload: "{}",
+    currency: "XTR",
+    prices: [{ label: "Donation", amount: amount }],
   });
 });
 
