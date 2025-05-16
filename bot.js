@@ -90,7 +90,7 @@ bot.command("id", async (ctx) => {
         const args = ctx.match?.trim();
         if (args) {
             try {
-                const username = args.replace("@", "").split("/").pop()!;
+                const username = args.replace("@", "").split("/").pop();
                 const user = await ctx.api.getChat(username);
                 text += `**[User ID](tg://user?id=${user.id})**: \`${user.id}\`\n`;
             } catch {
