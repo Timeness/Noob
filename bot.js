@@ -3,10 +3,11 @@ const { Bot } = require("grammy");
 const { evaluate } = require("./utils/eval");
 const { formatError } = require("./utils/formatError");
 const { readableTime } = require("./utils/time");
+const { setupAdminCommands } = require("./utils/admins");
 
 const SUDOERS = process.env.SUDOERS.split(" ").map(Number);
 const bot = new Bot(process.env.BOT_TOKEN);
-
+setupAdminCommands(bot);
 const paidUsers = new Map();
 
 bot.command("pay", async (ctx) => {
