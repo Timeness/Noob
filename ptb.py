@@ -6,11 +6,33 @@ from telegram.ext import (
     ApplicationBuilder, CommandHandler, ContextTypes,
     PreCheckoutQueryHandler
 )
+import requests
+import random
+import string
+import time
 
 BOT_TOKEN = "7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c"
 SUBSCRIPTION_PERIOD = 2592000
 
 user_subscriptions = {}
+
+def shorten_url_with_alias(long_url, prefix='pay_', max_retries=5):
+    chars = string.ascii_letters + string.digits
+    for attempt in range(max_retries):
+        rand_str = ''.join(random.choice(chars) for _ in range(7))
+        alias = f"{prefix}{rand_str}"
+        api_url = f'https://is.gd/create.php?format=json&url={long_url}&shorturl={alias}'
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            res_json = response.json()
+            if 'shorturl' in res_json:
+                return res_json['shorturl']
+            else:
+                print(f"Attempt {attempt+1}: Alias taken or error - {res_json.get('errormessage')}")
+        else:
+            print(f"Attempt {attempt+1}: HTTP error {response.status_code}")
+        time.sleep(1)
+    return "Failed to generate unique short URL"
 
 async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
@@ -41,11 +63,12 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         read_timeout=10.0,
         write_timeout=10.0
     )
+    results = shorten_url_with_alias(result)
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Pay with Stars", url=result)]]
+        [[InlineKeyboardButton("Pay Stars", web_app=WebAppInfo(url=results))]]
     )
     await update.message.reply_text(
-        "Click below to continue payment:", reply_markup=keyboard
+        "Click below to continue your subscription payment:", reply_markup=keyboard
     )
 
 async def precheckout(update: Update, context: ContextTypes.DEFAULT_TYPE):
