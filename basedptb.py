@@ -36,7 +36,6 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         payload=PAYLOAD,
         currency=CURRENCY,
         prices=prices,
-        start_parameter="subscribe",
         need_email=True,
         is_flexible=False,
         #subscription_period=1,
