@@ -7,7 +7,7 @@ from telegram.ext import (
     PreCheckoutQueryHandler
 )
 
-BOT_TOKEN = "YOUR_BOT_TOKEN"
+BOT_TOKEN = "7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c"
 SUBSCRIPTION_PERIOD = 2592000
 
 user_subscriptions = {}
