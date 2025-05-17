@@ -1,54 +1,110 @@
-from telegram import Update, LabeledPrice
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import time
+from datetime import datetime, timedelta
 
-BOT_TOKEN = "7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c"
-DURATION_MAP = {
-    "1m": 2592000,          # 30 days
-    "3m": 2592000 * 3,      # 90 days
-    "6m": 2592000 * 6,      # 180 days
-    "1y": 2592000 * 12      # 360 days
-}
+from telegram import Update, LabeledPrice, PreCheckoutQuery
+from telegram.ext import (
+    ApplicationBuilder, CommandHandler, ContextTypes,
+    PreCheckoutQueryHandler
+)
+
+BOT_TOKEN = "YOUR_BOT_TOKEN"
+SUBSCRIPTION_PERIOD = 2592000
+
+user_subscriptions = {}
 
 async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
-    if len(args) != 2:
-        await update.message.reply_text("Usage: /create <1m|3m|6m|1y> <amount>")
-        return
-
-    duration_key, amount_str = args[0].lower(), args[1]
-    
-    if duration_key not in DURATION_MAP:
-        await update.message.reply_text("Invalid duration. Use: 1m, 3m, 6m, or 1y.")
+    if len(args) != 1:
+        await update.message.reply_text("Usage: /create <amount>")
         return
 
     try:
-        amount = int(amount_str)
-        if amount <= 0:
-            await update.message.reply_text("Amount must be greater than 0.")
-            return
-        if amount > 10000:
-            await update.message.reply_text("Max allowed is 10000 Stars.")
+        amount = int(args[0])
+        if amount <= 0 or amount > 10000:
+            await update.message.reply_text("Amount must be > 0 and ≤ 10000.")
             return
     except ValueError:
         await update.message.reply_text("Amount must be a valid number.")
         return
 
-    subscription_seconds = DURATION_MAP[duration_key]
-    label = f"{duration_key.upper()} Subscription"
+    prices = [LabeledPrice(label="1 Month Subscription", amount=amount * 100)]
+    payload = f"{update.effective_user.id}:1m:{amount}:{int(time.time())}"
 
-    prices = [LabeledPrice(label=label, amount=amount * 100)]
-
-    result = await context.bot.create_invoice_link(
-        title="Star Subscription",
-        description=f"{label} access",
-        payload=f"sub-{duration_key}-{amount}",
+    await context.bot.create_invoice_link(
+        chat_id=update.effective_chat.id,
+        title="Telegram Stars Subscription",
+        description="1 Month Access",
+        payload=payload,
         currency="XTR",
         prices=prices,
-        subscription_period=subscription_seconds,
-        photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription"
+        subscription_period=SUBSCRIPTION_PERIOD,
+        photo_url="https://via.placeholder.com/300x200.png?text=Subscribe",
+        read_timeout=10.0,
+        write_timeout=10.0
     )
-    await update.message.reply_text(f"Click the link below to pay:\n{result}")
+
+async def precheckout(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query: PreCheckoutQuery = update.pre_checkout_query
+    await query.answer(ok=True)
+
+async def successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    payment = update.message.successful_payment
+    user_id = update.effective_user.id
+    payload_parts = payment.invoice_payload.split(":")
+    if len(payload_parts) == 4:
+        _, _, amount, _ = payload_parts
+        start_time = datetime.now()
+        end_time = start_time + timedelta(seconds=SUBSCRIPTION_PERIOD)
+        user_subscriptions[user_id] = {
+            "plan": "1m",
+            "amount": amount,
+            "start": start_time,
+            "end": end_time
+        }
+        await update.message.reply_text(
+            f"✅ Subscribed for 1 Month\nAmount: {amount} Stars\nExpires: {end_time.strftime('%Y-%m-%d %H:%M:%S')}"
+        )
+
+async def current_plan(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    sub = user_subscriptions.get(user_id)
+    now = datetime.now()
+    if sub and sub["end"] > now:
+        remaining = sub["end"] - now
+        await update.message.reply_text(
+            f"Current Plan: 1 Month\nAmount: {sub['amount']} Stars\nExpires in: {str(remaining).split('.')[0]}"
+        )
+    else:
+        await update.message.reply_text("No active subscription.")
+
+async def cancel_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    sub = user_subscriptions.get(user_id)
+    if not sub:
+        await update.message.reply_text("No active subscription to cancel.")
+        return
+    del user_subscriptions[user_id]
+    await update.message.reply_text("Subscription canceled.")
+
+async def refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    sub = user_subscriptions.get(user_id)
+    if not sub:
+        await update.message.reply_text("No payment history found.")
+        return
+    await update.message.reply_text("Manual refund logic not implemented. Contact admin.")
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Use /create <amount> to subscribe for 1 month.")
 
 app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("create", create))
+app.add_handler(CommandHandler("currentplan", current_plan))
+app.add_handler(CommandHandler("cancel", cancel_subscription))
+app.add_handler(CommandHandler("refund", refund))
+app.add_handler(PreCheckoutQueryHandler(precheckout))
+app.add_handler(CommandHandler("successfulpayment", successful_payment))
+
 app.run_polling()
