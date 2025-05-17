@@ -42,7 +42,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         write_timeout=10.0
     )
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Pay with Stars", web_app=WebAppInfo(url=result))]]
+        [[InlineKeyboardButton("Pay with Stars", url=result)]]
     )
     await update.message.reply_text(
         "Click below to continue payment:", reply_markup=keyboard
