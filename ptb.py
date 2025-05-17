@@ -31,7 +31,6 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     payload = f"{update.effective_user.id}:1m:{amount}:{int(time.time())}"
 
     result = await context.bot.create_invoice_link(
-        chat_id=update.effective_chat.id,
         title="Telegram Stars Subscription",
         description="1 Month Access",
         payload=payload,
