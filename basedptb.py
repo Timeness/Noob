@@ -5,10 +5,10 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-CURRENCY = "USD"
-TITLE = "Star Subscription"
-DESCRIPTION = "You are subscribing for star access!"
-PAYLOAD = "custom-payload-star"
+CURRENCY = "XTR"
+TITLE = "Subscription"
+DESCRIPTION = "You are subscribing for premium access."
+PAYLOAD = "pay"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Use /create <amount> to generate an invoice link.")
@@ -44,7 +44,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Click the link below to pay:\n{result}")
 
 def main():
-    app = ApplicationBuilder().token("YOUR_BOT_TOKEN").build()
+    app = ApplicationBuilder().token("7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c").build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("create", create))
     app.run_polling()
