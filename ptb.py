@@ -1,7 +1,7 @@
 import time
 from datetime import datetime, timedelta
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
-from telegram import Update, LabeledPrice, PreCheckoutQuery
+from telegram import Update, LabeledPrice, PreCheckoutQuery, WebAppInfo
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, ContextTypes,
     PreCheckoutQueryHandler
@@ -27,7 +27,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Amount must be a valid number.")
         return
 
-    prices = [LabeledPrice(label="Subscription", amount=amount)]
+    prices = [LabeledPrice(label="1 Month Subscription", amount=amount * 100)]
     payload = f"{update.effective_user.id}:1m:{amount}:{int(time.time())}"
 
     result = await context.bot.create_invoice_link(
@@ -42,7 +42,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         write_timeout=10.0
     )
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Pay with Stars", web_app={"url": result})]]
+        [[InlineKeyboardButton("Pay with Stars", web_app=WebAppInfo(url=result))]]
     )
     await update.message.reply_text(
         "Click below to continue payment:", reply_markup=keyboard
