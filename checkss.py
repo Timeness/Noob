@@ -30,7 +30,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     prices = [LabeledPrice(label="1 Month Subscription", amount=amount * 100)]
     payload = f"{update.effective_user.id}:1m:{amount}:{int(time.time())}"
 
-    await context.bot.create_invoice_link(
+    result = await context.bot.create_invoice_link(
         chat_id=update.effective_chat.id,
         title="Telegram Stars Subscription",
         description="1 Month Access",
@@ -42,6 +42,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         read_timeout=10.0,
         write_timeout=10.0
     )
+    await update.message.reply_text(f"Click the link below to pay:\n{result}")
 
 async def precheckout(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query: PreCheckoutQuery = update.pre_checkout_query
