@@ -36,8 +36,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         payload=PAYLOAD,
         currency=CURRENCY,
         prices=prices,
-        subscription_period=1,
-        need_email=True,
+        #subscription_period=1,
         photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription",
     )
 
