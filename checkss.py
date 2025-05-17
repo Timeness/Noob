@@ -38,8 +38,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     prices = [LabeledPrice(label=label, amount=amount * 100)]
 
-    await context.bot.send_invoice(
-        chat_id=update.effective_chat.id,
+    result = await context.bot.create_invoice_link(
         title="Star Subscription",
         description=f"{label} access",
         payload=f"sub-{duration_key}-{amount}",
@@ -48,6 +47,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         subscription_period=subscription_seconds,
         photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription"
     )
+    await update.message.reply_text(f"Click the link below to pay:\n{result}")
 
 app = ApplicationBuilder().token(BOT_TOKEN).build()
 app.add_handler(CommandHandler("create", create))
