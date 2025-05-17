@@ -28,7 +28,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Amount must be greater than 0.")
         return
 
-    prices = [LabeledPrice(label=f"{amount} Star(s)", amount=amount * 100)]
+    prices = [LabeledPrice(label=f"{amount} Star(s)", amount=amount)]
 
     result = await context.bot.create_invoice_link(
         title=TITLE,
@@ -36,7 +36,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         payload=PAYLOAD,
         currency=CURRENCY,
         prices=prices,
-        #subscription_period=1,
+        subscription_period=1,
         photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription",
     )
 
