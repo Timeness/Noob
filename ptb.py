@@ -49,7 +49,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Amount must be a valid number.")
         return
 
-    prices = [LabeledPrice(label="1 Month Subscription", amount=amount * 100)]
+    prices = [LabeledPrice(label="1 Month Subscription", amount=amount)]
     payload = f"{update.effective_user.id}:1m:{amount}:{int(time.time())}"
 
     result = await context.bot.create_invoice_link(
@@ -65,7 +65,7 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     results = shorten_url_with_alias(result)
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Pay Stars", web_app=WebAppInfo(url=results))]]
+        [[InlineKeyboardButton("🔐 Pay", web_app=WebAppInfo(url=results))]]
     )
     await update.message.reply_text(
         "Click below to continue your subscription payment:", reply_markup=keyboard
