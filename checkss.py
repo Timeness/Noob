@@ -43,13 +43,10 @@ async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
         title="Star Subscription",
         description=f"{label} access",
         payload=f"sub-{duration_key}-{amount}",
-        provider_token=PROVIDER_TOKEN,
         currency="XTR",
         prices=prices,
         subscription_period=subscription_seconds,
-        photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription",
-        photo_width=300,
-        photo_height=200
+        photo_url="https://via.placeholder.com/300x200.png?text=Star+Subscription"
     )
 
 app = ApplicationBuilder().token(BOT_TOKEN).build()
