@@ -1,9 +1,8 @@
 import { Bot } from "grammy";
-import { YTMusic } from '@codyduong/ytmusicapi';
+import * as YTMusicModule from '@codyduong/ytmusicapi';
 
+const ytm = new YTMusicModule.YTMusic();
 const bot = new Bot("7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c");
-
-const ytm = new YTMusic();
 
 bot.command("search", async (ctx) => {
   const input = ctx.message.text;
