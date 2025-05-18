@@ -1,7 +1,7 @@
 import { Bot } from "grammy";
 import YTMusic from '@codyduong/ytmusicapi';
 
-const bot = new Bot("TELEGRAM_BOT_TOKEN_HERE");
+const bot = new Bot("7941535778:AAHuXyvkY5jlLi4bUlQWDjTCZHEJhfSqJ2c");
 
 const ytm = new YTMusic();
 
