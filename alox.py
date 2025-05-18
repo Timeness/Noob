@@ -7,11 +7,15 @@ import os
 from datetime import datetime, timedelta
 import random
 import string
+from pyngrok import ngrok, conf
 
 app = Flask(__name__)
 
-# Device selection: Use GPU if available, else CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+NGROK_AUTHTOKEN = "2t4O9FHI0o8BspbxmHA3MbGZkNn_3UKKckZPzmHqsk1oQWQsn"
+NGROK_SUBDOMAIN = "hopefully-relevant-wren"
+conf.get_default().auth_token = NGROK_AUTHTOKEN
 
 class AloxNet(nn.Module):
     def __init__(self, vocab_size, embed_dim, hidden_dim, output_dim):
@@ -35,7 +39,6 @@ model = AloxNet(vocab_size, embed_dim, hidden_dim, output_dim).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
 criterion = nn.CrossEntropyLoss()
 
-# Load diffuser model, only move to GPU if CUDA is available
 diffuser = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 diffuser = diffuser.to(device)
 
@@ -112,4 +115,6 @@ def code():
     return jsonify({"code": code_snippet})
 
 if __name__ == "__main__":
+    public_url = ngrok.connect(5000, domain=f"{NGROK_SUBDOMAIN}.ngrok-free.app")
+    print(f"ngrok tunnel started at: {public_url}")
     app.run(debug=True, port=5000)
