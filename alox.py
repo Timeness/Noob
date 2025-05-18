@@ -10,6 +10,9 @@ import string
 
 app = Flask(__name__)
 
+# Device selection: Use GPU if available, else CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class AloxNet(nn.Module):
     def __init__(self, vocab_size, embed_dim, hidden_dim, output_dim):
         super(AloxNet, self).__init__()
@@ -28,12 +31,13 @@ vocab_size = 10000
 embed_dim = 256
 hidden_dim = 512
 output_dim = 1024
-model = AloxNet(vocab_size, embed_dim, hidden_dim, output_dim).to('cuda')
+model = AloxNet(vocab_size, embed_dim, hidden_dim, output_dim).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
 criterion = nn.CrossEntropyLoss()
 
+# Load diffuser model, only move to GPU if CUDA is available
 diffuser = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
-diffuser = diffuser.to("cuda")
+diffuser = diffuser.to(device)
 
 class SyntheticDataGenerator:
     def __init__(self, vocab_size):
@@ -45,7 +49,7 @@ class SyntheticDataGenerator:
     def generate_batch(self, batch_size=32, seq_length=50):
         sequences = [self.generate_sequence(seq_length) for _ in range(batch_size)]
         indices = [[self.vocab.index(word) for word in seq] for seq in sequences]
-        return torch.tensor(indices, dtype=torch.long).to('cuda')
+        return torch.tensor(indices, dtype=torch.long).to(device)
 
 data_gen = SyntheticDataGenerator(vocab_size)
 
@@ -55,7 +59,7 @@ def train_model():
         batch = data_gen.generate_batch()
         optimizer.zero_grad()
         outputs = model(batch)
-        target = torch.randint(0, output_dim, (batch.shape[0],)).to('cuda')
+        target = torch.randint(0, output_dim, (batch.shape[0],)).to(device)
         loss = criterion(outputs, target)
         loss.backward()
         optimizer.step()
@@ -63,7 +67,7 @@ def train_model():
 def generate_text(prompt):
     model.eval()
     tokens = [random.choice(data_gen.vocab) for _ in range(5)]
-    input_indices = torch.tensor([[data_gen.vocab.index(t) for t in tokens]], dtype=torch.long).to('cuda')
+    input_indices = torch.tensor([[data_gen.vocab.index(t) for t in tokens]], dtype=torch.long).to(device)
     with torch.no_grad():
         output = model(input_indices)
     top_indices = torch.topk(output, k=5, dim=-1).indices[0].cpu().numpy()
